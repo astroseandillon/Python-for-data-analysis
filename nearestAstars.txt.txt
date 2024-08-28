@@ -1,0 +1,3 @@
+The nearest A star is Sirius at a distance of 2.638 parsecs
+the second nearest A stars is Altair at a distance of 5.1227 parsecs
+

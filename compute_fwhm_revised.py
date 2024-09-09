@@ -5,7 +5,7 @@ Created on Sat Sep  7 13:20:55 2024
 
 @author: physics
 """
-from sys import argv
+
 
 
 def fwhm(lam=1.0, d_tel=1.0):

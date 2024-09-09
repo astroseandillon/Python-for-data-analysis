@@ -12,6 +12,6 @@ def fwhm(lam, d_tel):
     fwhm = 1.028 * 206265 * float(lam) * 1e-6 / float(d_tel)
     return fwhm
 
-# script, lam, d_tel = argv
+script, lam, d_tel = argv
 
-# print('The FWHM is %f' %(fwhm(lam, d_tel)))
+print('The FWHM is %f' %(fwhm(lam, d_tel)))

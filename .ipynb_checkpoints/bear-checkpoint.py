@@ -60,7 +60,7 @@ def dead(why):
     print(why, "Game Over!")
     exit(0)
 
-def rickroom()
+def rickroom():
     print("You see a brightly illuminated man in a dark alley.")
     print("He swears an oath of eternal loyalty.")
     print("Do you accept his oath? [y/n]")
@@ -100,3 +100,6 @@ def start():
         rickroom()
     else:
         dead("You stumble around the room until you starve.")
+
+
+start()

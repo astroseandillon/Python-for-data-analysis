@@ -30,16 +30,9 @@ def pca(dat, npc):
     eig_val = eig_val[:n_comp]
 #7. compute pca
     pca_data = mean_sub.dot(eig_vec)
+    print('The PCA is given by \n{}\n and the variance is \n{}\n PCs = {}'
+          .format(pca_data, explained_variance, npc))
     return pca_data, explained_variance
-
-
-
-
-
-
-
-
-
 
 
 
@@ -55,4 +48,7 @@ data=np.array([[7., 4., 3.],
                [7., 4., 5.],
                [8., 2., 2.]])
 
-print('hello world')
+
+pc5, var5 = pca(data,5)
+print('')
+pc3, var3 = pca(data,3)

@@ -8,6 +8,7 @@ Created on Mon Nov 11 10:31:24 2024
 
 import numpy as np
 import matplotlib.pyplot as plt
+plt.close('all')
 from astropy.io import ascii
 
 data = ascii.read('pca_csv.csv')
@@ -49,7 +50,8 @@ data = ascii.read('pca_csv.csv')
 
 
 
-
+fig, ax = plt.subplots()
+ax.scatter(data['Magnititude'], data['Mass/Temp'])
 
 
 

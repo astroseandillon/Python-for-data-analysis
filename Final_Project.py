@@ -9,9 +9,73 @@ Created on Mon Nov 11 10:31:24 2024
 import numpy as np
 import matplotlib.pyplot as plt
 plt.close('all')
-from astropy.io import ascii
+from sklearn.decomposition import PCA
 
-data = ascii.read('pca_csv.csv')
+# from astropy.io import ascii
+# from astropy.table import Table
+# I tried to use astropy but it didn't want to work as well as pandas
+
+import pandas as pd
+
+df = pd.read_csv('pca_csv.csv')
+# Loading the csv file into a pandas dataframe
+
+dmatrix = df[['Kinematic Age (yr)', 
+                'Central Star Temp (K)', 
+                'Aspect Ratio (Overall)',
+                'PG Mass (Solar M)',
+                'C(e-4)',
+                'O(e-4)',
+                'C/O',
+                'Metallicity [O/H](e-4)',
+                'Radial Velocity (km/s)',
+                'Magnititude',
+                'MAT',
+                'Mass/Temp',
+                'MA',
+                'A/T',
+                'TA']]
+# Specifying which columns we're interested in
+
+
+data = dmatrix.values
+# making an array of the data points we care about
+
+# evals, evecs = np.linalg.eigh(data)
+
+data = np.nan_to_num(data, copy=True, nan=-1.0)
+data=data
+
+pca = PCA(n_components=5)
+pca.fit(data)
+
+
+print(pca.explained_variance_)
+
+print('')
+
+
+
+
+mean = np.mean(data,axis=0)
+
+mean_data = data-mean
+
+cov = np.matmul(mean_data.T, mean_data)
+
+eig_val, eig_vec = np.linalg.eigh(cov)
+
+indices = np.argsort(eig_val)[::-1]
+
+eig_val = eig_val[indices]
+eig_vec = eig_vec[:,indices]
+
+sum_eig_val = np.sum(eig_val)
+explained_variance = eig_val/ sum_eig_val
+
+print("Explained variance ", explained_variance)
+cumulative_variance = np.cumsum(explained_variance)
+print("Cumulative variance ", cumulative_variance)
 
 
 
@@ -19,7 +83,32 @@ data = ascii.read('pca_csv.csv')
 
 
 
-# data.info
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# data = np.where(data, data==np.nan,-1)
+
+
+
+
+
+
 
 # <Table length=136>
 #          name           dtype     class     n_bad
@@ -47,11 +136,8 @@ data = ascii.read('pca_csv.csv')
 #                     TA   int64 MaskedColumn    47
 
 
-
-
-
-fig, ax = plt.subplots()
-ax.scatter(data['Magnititude'], data['Mass/Temp'])
+# fig, ax = plt.subplots()
+# ax.scatter(data['Magnititude'], data['Mass/Temp'])
 
 
 

@@ -19,7 +19,7 @@ import pandas as pd
 
 df = pd.read_csv('pca_csv.csv')
 # Loading the csv file into a pandas dataframe
-
+df = df.dropna()
 dmatrix = df[['Kinematic Age (yr)', 
                 'Central Star Temp (K)', 
                 'Aspect Ratio (Overall)',
@@ -43,21 +43,21 @@ data = dmatrix.values
 
 # evals, evecs = np.linalg.eigh(data)
 
-data = np.nan_to_num(data, copy=True, nan=-1.0)
-data=data
+# data = np.nan_to_num(data, copy=True, nan=0.0)
+# data=data
 
-pca = PCA(n_components=5)
-pca.fit(data)
-
-
-print(pca.explained_variance_)
-
-print('')
+# pca = PCA(n_components=5)
+# pca.fit(data)
 
 
+# print(pca.explained_variance_)
+
+# print('')
 
 
-mean = np.mean(data,axis=0)
+
+
+mean = np.nanmean(data,axis=0)
 
 mean_data = data-mean
 
@@ -83,6 +83,52 @@ print("Cumulative variance ", cumulative_variance)
 
 
 
+fig, ax = plt.subplots()
+plt.plot(np.arange(0, len(explained_variance), 1), cumulative_variance,marker='o')
+plt.title("Explained variance vs number of components")
+plt.xlabel("Number of components")
+plt.ylabel("Explained variance")
+plt.show()
+
+n_comp = 2
+eig_vec = eig_vec[:,:n_comp]
+eig_val=eig_val[:n_comp]
+pca_data = mean_data.dot(eig_vec)
+
+
+fig2, ax2 = plt.subplots(1,3, figsize= (10,6))
+fig2.subplots_adjust(wspace=1.0)
+  # Plot original data
+ax2[0].scatter(data[:,0], data[:,1], color='blue', marker='.')
+
+  # Plot data after subtracting mean from data
+ax2[1].scatter(mean_data[:,0], mean_data[:,1], color='red', marker='.')
+
+  # Plot pca data 
+ax2[2].scatter(pca_data[:,0], pca_data[:,1], color='red', marker='.')
+
+  # Set title
+ax2[0].set_title("Original data")
+ax2[1].set_title("Original data after subtracting mean")
+ax2[2].set_title("Transformed data, PC="+str(n_comp))
+
+  # Set x ticks
+# ax[0].set_xticks(np.arange(-8, 1, 8))
+# ax[1].set_xticks(np.arange(-8, 1, 8))
+# ax[2].set_xticks(np.arange(-8, 1, 8))
+
+  # Set grid to 'on'
+ax2[0].grid('on')
+ax2[1].grid('on')
+ax2[2].grid('on')
+
+  #major_axis = eig_vec[:,0].flatten()
+xmin = np.amin(pca_data[:,0])
+xmax = np.amax(pca_data[:,0])
+ymin = np.amin(pca_data[:,1])
+ymax = np.amax(pca_data[:,1])
+
+plt.show()
 
 
 
@@ -90,24 +136,30 @@ print("Cumulative variance ", cumulative_variance)
 
 
 
+recon_data = pca_data.dot(eig_vec.T) + mean
 
 
+fig3, ax3 = plt.subplots(1,3, figsize= (12, 8))
+fig3.subplots_adjust(wspace=1)
+ax3[0].scatter(data[:,0], data[:,1], color='blue', marker='.')
+xl=ax3[0].get_xlim()
+yl=ax3[0].get_ylim()
 
+ax3[1].scatter(recon_data[:,0], recon_data[:,1], color='red', marker='.')
+ax3[1].set_xlim(xl)
+ax3[1].set_ylim(yl)
 
+ax3[2].scatter(data[:,0]-recon_data[:,0], data[:,1]-recon_data[:,1], color='green', marker='.')
+# ax3[2].set_xlim(xl)
+# ax3[2].set_ylim(yl)
 
-
-
-
-
-
-
-
-# data = np.where(data, data==np.nan,-1)
-
-
-
-
-
+ax3[0].set_title("Original data")
+ax3[1].set_title("Reconstructed data, PC="+str(n_comp))
+ax3[2].set_title("Original-Reconstructed data,PC="+str(n_comp))
+ax3[0].grid('on')
+ax3[1].grid('on')
+ax3[2].grid('on')
+plt.show()
 
 
 # <Table length=136>
@@ -136,8 +188,6 @@ print("Cumulative variance ", cumulative_variance)
 #                     TA   int64 MaskedColumn    47
 
 
-# fig, ax = plt.subplots()
-# ax.scatter(data['Magnititude'], data['Mass/Temp'])
 
 
 
